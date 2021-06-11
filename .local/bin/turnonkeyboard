@@ -1,0 +1,5 @@
+#!/bin/sh
+master=$(xinput list | grep "Virtual core keyboard" | cut -f 2 | sed 's/id=//')
+selection=$(xinput list | grep "∼" | cut -f 1 | dmenu -l 20 -p "Choose the device to reconnect:")
+id=$(xinput list | grep "$selection" | cut -f 2 | sed 's/id=//')
+xinput reattach $id $master
