@@ -1,4 +1,4 @@
 #!/bin/sh
-selection=$(xinput list | grep "keyboard" | cut -f 1 | sed '1d' | dmenu -l 20)
+selection=$(xinput list | grep "keyboard" | cut -f 1 | sed '1d' | dmenu -l 20 -p "Choose the device to disconnect")
 id=$(xinput list | grep "$selection" | cut -f 2 | sed 's/id=//')
 xinput float $id
