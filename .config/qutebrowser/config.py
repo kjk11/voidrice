@@ -34,6 +34,6 @@ c.url.start_pages = 'https://searx.info'
 # Bindings for normal mode
 # I like to bind semicolon to search to make it easier to reach:
 config.bind(';', 'set-cmd-text /')
-config.bing('/', 'set-cmd-text ?')
+config.bind('/', 'set-cmd-text ?')
 config.bind('J', 'tab-prev')
 config.bind('K', 'tab-next')
