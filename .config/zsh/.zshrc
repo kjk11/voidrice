@@ -27,13 +27,14 @@ HISTFILE=~/.cache/zsh/history
 
 # Different tab/ autocomplete
 # This allows selecting suggestions
-autoload -Uz compinit
+# What would the option z for autoload do?
+autoload -U compinit
 zstyle ':completion:*' menu yes select
 zstyle ':completion:*' format 'Completing %d'
 zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s%p
 zmodload zsh/complist
 compinit
-_comp_options+=(globdots)		# Include hidden files.
+_comp_options+=(globdots)	# Include hidden files.
 
 # vi mode
 bindkey -v
