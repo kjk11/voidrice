@@ -17,12 +17,21 @@ HISTFILE=~/.cache/zsh/history
 [ -f "${XDG_CONFIG_HOME:-$HOME/.config}/shell/aliasrc" ] && source "${XDG_CONFIG_HOME:-$HOME/.config}/shell/aliasrc"
 [ -f "${XDG_CONFIG_HOME:-$HOME/.config}/shell/zshnameddirrc" ] && source "${XDG_CONFIG_HOME:-$HOME/.config}/shell/zshnameddirrc"
 
-# Basic auto/tab complete:
-autoload -U compinit
-zstyle ':completion:*' menu select
-zmodload zsh/complist
+# This is Luke's autocomplete
+## Basic auto/tab complete:
+#autoload -U compinit
+#zstyle ':completion:*' menu select
+#zmodload zsh/complist
+#compinit
+#_comp_options+=(globdots)		# Include hidden files.
+
+# Different tab/ autocomplete
+# This allows selecting suggestions
+autoload -Uz compinit
 compinit
-_comp_options+=(globdots)		# Include hidden files.
+zstyle ':completion:*' menu yes select
+zstyle ':completion:*' format 'Completing %d'
+zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s%p
 
 # vi mode
 bindkey -v
