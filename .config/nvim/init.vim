@@ -23,12 +23,15 @@ set title
 set bg=light
 set go=a
 set mouse=a
-set nohlsearch
+set hlsearch
+set incsearch " Jumpts to matching position while you type
+set lbr " Avoids breaking line in the middle of a word
 set clipboard+=unnamedplus
 set noshowmode
 set noruler
 set laststatus=0
 set noshowcmd
+set ignorecase
 
 " Some basics:
 	nnoremap c "_c
@@ -37,6 +40,24 @@ set noshowcmd
 	syntax on
 	set encoding=utf-8
 	set number relativenumber
+	noremap ; /
+	noremap / ?
+	nmap K gt
+	nmap J gT
+	map _ : noh <CR>
+
+" Use metakey to navigate between tabs
+noremap <unique> <M-1> 1gt
+noremap <unique> <M-2> 2gt
+noremap <unique> <M-3> 3gt
+noremap <unique> <M-4> 4gt
+noremap <unique> <M-5> 5gt
+noremap <unique> <M-6> 6gt
+noremap <unique> <M-7> 7gt
+noremap <unique> <M-8> 8gt
+noremap <unique> <M-9> 9gt
+noremap <unique> <M-0> 10gt
+
 " Enable autocompletion:
 	set wildmode=longest,list,full
 " Disables automatic commenting on newline:
