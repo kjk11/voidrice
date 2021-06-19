@@ -17,6 +17,8 @@ Plug 'vimwiki/vimwiki'
 Plug 'bling/vim-airline'
 Plug 'tpope/vim-commentary'
 Plug 'ap/vim-css-color'
+Plug 'Shougo/unite.vim'
+Plug 'rafaqz/citation.vim'
 call plug#end()
 
 set title
