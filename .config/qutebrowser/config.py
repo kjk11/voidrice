@@ -16,10 +16,10 @@ c.url.default_page = 'https://searx.info/'
 # used by prepending the search engine name to the search term, e.g.
 # `:open google qutebrowser`.
 # Type: Dict
-c.url.searchengines = {'DEFAULT': 'https://searx.info/?q={}'}
+c.url.searchengines = {'DEFAULT': 'https://lite.duckduckgo.com/lite/?q={}'}
 
 # Page(s) to open at the start.
-c.url.start_pages = 'https://searx.info'
+c.url.start_pages = 'https://lite.duckduckgo.com/lite'
 
 # Set dark mode
 config.set("colors.webpage.darkmode.enabled", True)

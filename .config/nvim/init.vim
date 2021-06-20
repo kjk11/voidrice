@@ -95,8 +95,6 @@ noremap <unique> <M-0> 10gt
 let g:citation_vim_bibtex_file="~/Downloads/My Library.bib"
 let g:citation_vim_mode="bibtex"
 let g:citation_vim_cache_path='~/.cache/nvim/citation.vim'
-" let g:citation_vim_description_format = "{}"
-" let g:citation_vim_description_fields = ["title"]
 let g:citation_vim_outer_prefix="("
 let g:citation_vim_inner_prefix="@"
 let g:citation_vim_suffix=")"
