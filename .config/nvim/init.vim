@@ -19,6 +19,9 @@ Plug 'tpope/vim-commentary'
 Plug 'ap/vim-css-color'
 Plug 'Shougo/unite.vim'
 Plug 'rafaqz/citation.vim'
+Plug 'junegunn/fzf'
+Plug 'junegunn/fzf.vim'
+Plug 'michal-h21/vim-zettel'
 call plug#end()
 
 set title
@@ -95,9 +98,9 @@ noremap <unique> <M-0> 10gt
 let g:citation_vim_bibtex_file="~/Downloads/My Library.bib"
 let g:citation_vim_mode="bibtex"
 let g:citation_vim_cache_path='~/.cache/nvim/citation.vim'
-let g:citation_vim_outer_prefix="("
+let g:citation_vim_outer_prefix=""
 let g:citation_vim_inner_prefix="@"
-let g:citation_vim_suffix=")"
+let g:citation_vim_suffix="^"
 let g:citation_vim_description_format = "{} {} {}"
 let g:citation_vim_description_fields = ["author", "title", "key"]
 nmap <leader>u [unite]
@@ -106,7 +109,7 @@ nnoremap <silent>[unite]ci	:	<C-u>Unite -buffer-name=citation-start-insert -defa
 nnoremap <silent>[unite]ct	:	<C-u>Unite -buffer-name=citation-start-insert -default-action=append citation/title<cr>
 nnoremap <silent>[unite]cn	:	<C-u>Unite -input=<C-R><C-W> -default-action=preview -force-immediately citation/combined<CR>
 nnoremap <silent>[unite]cx 	:	<C-u>exec "Unite -default-action=start citation/key:" . escape(input('Search Key : '),' ') <cr>
-noremap cf : ! zathura $(open_page <C-R><C-W>) &<CR>
+noremap cf : ! zathura $(open_page <cWORD>) & <CR>
 
 
 " Shortcutting split navigation, saving a keypress:

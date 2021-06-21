@@ -1,0 +1,3 @@
+#!/bin/bash
+cd ~/Documents/bib
+ls | entr -s 'ls ~/Documents/bib | xargs cat > ~/Documents/bibfile.bib'

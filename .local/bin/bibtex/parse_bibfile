@@ -1,0 +1,32 @@
+# This Script parses .bib files imported from Zotero into its individual entries and creates files for them
+# Add an option to add a list of tags to all the imported books
+# Add two different folders in the ~/Documents directory for PDFS and Citations
+# $1 .bib file to be parsed
+
+cd ~/Documents
+
+# First introduce a string separated by $
+sepstring="$(sed -e 's/@/$\n@/' -e "/^$/d" "$1")"
+
+# This pipe stream gets the number of bibtex entries in the file
+# It first prints the number of entries using awk and tail
+number="$(echo "$sepstring" | awk '{print NR}' RS='$' | tail -1)"
+
+# Remove the original file:
+rm "$1"
+
+# Loop over the number of entries;
+for ((i=2; i<$number+1; ++i));
+do
+	# This pipe stream uses awk to select the nth entry and deletes empty lines with sed
+	entry="$(echo "$sepstring" | awk "NR!=$i{next}1" RS='$' | sed "/^$/d")"
+	oldkey="$(extract_key "$entry")"
+	newkey="$(tr -dc A-Za-z0-9 </dev/random | head -c 30 ; echo '')"
+	oldpath="$(echo "$entry" | sed -e '/file =/!d' -e 's/.*\(\/home.*.pdf\):.*/\1/')"
+	oldname="$(echo "$oldpath" | sed 's/.*\///')"
+	entry="$(echo "$entry" | sed "s/$oldkey/$newkey/" | xargs -I {} change_field -f file -s "$newkey.pdf^" -b {} )"
+	echo "$entry" >> "bib/$newkey.bib"
+	cp """$oldpath""" "pdf"
+	mv """pdf/$oldname""" "pdf/$newkey.pdf"
+	echo "$entry"
+done >> "bibfile.bib"

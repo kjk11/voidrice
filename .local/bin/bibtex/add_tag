@@ -1,0 +1,44 @@
+# DESRIPTION OF WHAT THIS SCRIPT DOES
+# Parses the new tags into an array and the existing tags into an array
+# Combines the two arrays removing duplicates
+# Recombines the array to a string with commas as a delimiter
+
+# THINGS TO IMPROVE
+# Works fine, but solution for giving out the string does not seem the most elegant.
+
+#!/bin/bash
+addt()
+{
+# Take both file and stdi as input
+[ -f $2 ] && entry="$(cat "$2")" || entry="$2"
+
+# Parse all the tags into two arrays
+# tr command converts everything into lower case in order to avoid cases like:
+IFS=',' read -a 'array1' <<< "$(echo "$1" | tr '[:upper:]' '[:lower:]')"
+IFS=',' read -a 'array2' <<< "$(extract_field "tags" "$entry" | tr '[:upper:]' '[:lower:]')"
+OLDIFS="$IFS"
+IFS=$'\n'
+combined=(`for R in "${array1[@]}" "${array2[@]}" ; do echo "$R" ; done | sort -du`)
+IFS="$OLDIFS"
+
+# Now rejoin the array with commas
+delim=","
+joined=""
+for item in "${combined[@]}"; do
+  joined="$item$delim $joined"
+  delim=","
+done
+
+# Now replace the old tags field with the new one
+change_field -f "tags" -s "$joined" -b "$2"
+}
+
+while getopts is:b: opt; do
+case "$opt" in
+	i) change=1;;
+	s) newtag="$OPTARG";;
+	b) bibtex="$OPTARG";;
+esac
+done
+
+[ "$change" == 1 ] && [ -f "$bibtex" ] && echo "$(addt "$newtag" "$bibtex")" > "$bibtex" || addt "$newtag" "$bibtex"

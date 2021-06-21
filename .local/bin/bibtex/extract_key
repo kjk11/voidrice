@@ -1,0 +1,15 @@
+# WORKS
+# This script extracts the citation key from a bibtex entry
+# $1 Bibtex entry
+
+#!/bin/bash
+# Handle both files and stdi
+[ -f "$1" ] && input="$(cat $1)" || input="$1"
+# Cut everything up to the first comma
+x=${input%%,*}
+# Cut everything before the open curly bracket {
+y=${x#*[{]}
+# Use sed to remove trailing whitespace
+z=$(echo "$y" | sed 's/\s*\(\)\s*/\1/')
+# Output the string
+echo "$z"

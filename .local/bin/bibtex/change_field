@@ -1,0 +1,22 @@
+# $1 is the field to be edited
+# $2 is the new content of the field
+# $3 is the bibtex
+#!/bin/bash
+changedf()
+{
+[ -f "$3" ] && input="$(cat $3)" || input="$3"
+new="$(echo "$input" | sed "s/$1.*=.*{.*}/$1 = {$2}/")"
+[ -z "$(echo "$input" | grep -P "$1.*=")" ] && new="$(echo "$input" | sed "2i$1 = {$2},")"
+echo "$new"
+}
+
+while getopts if:s:b: opt; do
+case "$opt" in
+	i) change=1;;
+	f) field="$OPTARG";;
+	s) substitution="$OPTARG";;
+	b) bibtex="$OPTARG";;
+esac
+done
+
+[ "$change" == 1 ] && [ -f "$bibtex" ] && echo "$(changedf "$field" "$substitution" "$bibtex")" > "$bibtex" || changedf "$field" "$substitution" "$bibtex"
