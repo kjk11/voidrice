@@ -1,0 +1,29 @@
+rm /tmp/search
+cd ~/Documents/txt
+grep="$(grep -r -m1 -C4 -wi "$1")"
+at="@"
+extract()
+{
+grep -P "^$1.*=" "$2" | sed 's/^[^{]*{\([^{}]*\)}.*/\1/'
+}
+# Get the number of hits:
+number="$(echo "$grep" | awk '{print NR}' RS='--' | tail -1)"
+for ((i=1; i<$number; ++i));
+do
+	# Separate different entries
+	entry="$(echo "$grep" | awk "NR!=$i{next}1" RS='--')"
+	# right="$(echo "$entry" | awk -F".txt" '{print $2}')"
+	right="$(echo "$entry" | sed -e 's|.*\.txt||g')"
+	# key="$(echo "$entry" | awk -F/ '{print $1}'| sed '/^$/d' | uniq )"
+	key="$(echo "$entry" | sed -e 's|/.*||g' | uniq)"
+	# page="$(echo "$entry" | sed -e 's|.*/\(.*\)\..*|\1|')"
+	page="$(echo "$entry" | sed -e 's|.*/||g' -e 's|\.txt.*||g' -e 's/^0*//' | uniq)"
+	path="$(echo $HOME/Documents/bib/${key}.bib | tr -d '[:blank:]')"
+
+	echo ""
+	extract title $path
+	extract author $path
+	echo @${key}^${page} | tr -d '[:blank:]'
+	echo "$right"
+done #>> /tmp/search
+#nvim /tmp/search

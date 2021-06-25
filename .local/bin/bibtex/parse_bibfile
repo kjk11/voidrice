@@ -29,4 +29,14 @@ do
 	cp """$oldpath""" "pdf"
 	mv """pdf/$oldname""" "pdf/$newkey.pdf"
 	echo "$entry"
+	mkdir "txt/$newkey"
+	# Create txt files
+	pp="$(pdfinfo "pdf/$newkey.pdf" | grep "Pages" | awk '{print $2}')"
+	for ((j=1; j<$pp+1; ++j));
+	do
+	echo $j
+	five_digit_page="$(printf "%05d\n" "$j")"
+	pdftotext -layout -f "$j" -l "$j" "pdf/$newkey.pdf" "txt/$newkey/$five_digit_page.txt"
+	sed -i "1i \@$newkey\^" "txt/$newkey/${five_digit_page}.txt"
+	done
 done >> "bibfile.bib"
