@@ -1,7 +1,7 @@
 # I could add separate options for zathura versus mupdf here
 #!/bin/bash
-key="$(echo $1 | sed -e 's/.*@//' -e 's/\^.*//')"
-[[ "$1" == *'^'* ]] && page="$(echo "$1" | sed -e 's/.*\^//' -e 's/).*//')"
+key="$(echo $1 | sed -e 's/.*@//' -e 's/\^.*//' -e 's/\.pdf//' -e 's/\.bib//' | tr -d '{},.')"
+[[ "$1" == *'^'* ]] && page="$(echo "$1" | tr -d '{},.'| sed -e 's/.*\^//' -e 's/).*//')"
 cd "$HOME/Documents/bib"
 entry="$(cat "$key.bib" | sed -n 's/file\s*=\s*{\(.*\)},/\1/p')"
 [ -z $page ] && page="$(echo $entry | sed 's/.*\^//')"

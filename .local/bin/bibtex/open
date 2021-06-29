@@ -1,0 +1,20 @@
+#!/bin/bash
+cd $HOME/Documents/bib
+query="$(ls | xargs cat | sed -e '/tags/!d' -e 's/.*{\(.*\)}.*/\1/' -e 's/,/\n/g' | sed -e 's/\s*\(\)\s*/\1/' -e '/^$/d' | sort | uniq | fzf -m | awk -F, '{print "\"tags: " $1 "\""}' | tr '\n' ';')"
+bib="$(echo $query | xargs select_citations)"
+[ -z "$query" ] && echo "Empty query"
+[ -z "$bib" ] && echo "No results"
+echo "$bib"
+key="$(echo "$bib" | parallel cite | fzf | sed 's/^[^{]*{\([^{}]*\)}.*/\1/')"
+
+while getopts 'bpk' opt
+do
+	case $opt in
+		p) pdf="yes" ;;
+		b) bibfile="yes" ;;
+	esac
+done
+
+[ -z $pdf ] || echo $key | xargs open_page | xargs zathura
+[ -z $bibfile ] || nvim "$key.bib"
+echo $key
