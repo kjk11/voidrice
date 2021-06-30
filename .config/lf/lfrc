@@ -73,35 +73,42 @@ cmd copyto ${{
 cmd setbg "$1"
 cmd bulkrename $vidir
 
+# Bibtex commands
+
+cmd add_tag ${{
+	add_tag -is "$1" -b "$fx"
+}}
+
 # Bindings
-map <c-f> $lf -remote "send $id select '$(fzf)'"
-map J $lf -remote "send $id cd $(cut -d'	' -f2 ${XDG_CONFIG_HOME:-$HOME/.config}/shell/bm-dirs | fzf)"
-map gh
+#map <c-f> $lf -remote "send $id select '$(fzf)'"
+#map J $lf -remote "send $id cd $(cut -d'	' -f2 ${XDG_CONFIG_HOME:-$HOME/.config}/shell/bm-dirs | fzf)"
+#map gh
 map g top
 map D delete
-map E extract
-map C copyto
-map M moveto
-map <c-n> push :mkdir<space>
-map <c-r> reload
-map <c-s> set hidden!
+#map E extract
+#map C copyto
+#map M moveto
+#map <c-n> push :mkdir<space>
+#map <c-r> reload
+#map <c-s> set hidden!
 map <enter> shell
-map x $$f
-map X !$f
-map o &mimeopen $f
-map O $mimeopen --ask $f
-
-map A rename # at the very end
-map c push A<c-u> # new rename
-map I push A<c-a> # at the very beginning
-map i push A<a-b><a-b><a-f> # before extention
-map a push A<a-b> # after extention
-map B bulkrename
-map b $setbg $f
-
-map <c-e> down
-map <c-y> up
-map V push :!nvim<space>
+#map x $$f
+#map X !$f
+map o open $f
+map O open --ask $f
+map at push :add_tag<space>"
+#
+#map A rename # at the very end
+#map c push A<c-u> # new rename
+#map I push A<c-a> # at the very beginning
+#map i push A<a-b><a-b><a-f> # before extention
+#map a push A<a-b> # after extention
+#map B bulkrename
+#map b $setbg $f
+#
+#map <c-e> down
+#map <c-y> up
+#map V push :!nvim<space>
 
 # Source Bookmarks
 source "~/.config/lf/shortcutrc"

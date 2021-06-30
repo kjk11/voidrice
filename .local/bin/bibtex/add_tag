@@ -10,7 +10,7 @@
 addt()
 {
 # Take both file and stdi as input
-[ -f $2 ] && entry="$(cat "$2")" || entry="$2"
+[ -f "$2" ] && entry="$(cat "$2")" || entry="$2"
 
 # Parse all the tags into two arrays
 # tr command converts everything into lower case in order to avoid cases like:

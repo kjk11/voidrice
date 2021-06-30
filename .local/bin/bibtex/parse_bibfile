@@ -5,15 +5,21 @@
 
 cd ~/Documents
 
+while getopts t: opt; do
+case "$opt" in
+	t) tag="$OPTARG";;
+esac
+done
+
 # First introduce a string separated by $
-sepstring="$(sed -e 's/@/$\n@/' -e "/^$/d" "$1")"
+sepstring="$(sed -e 's/@/$\n@/' -e "/^$/d" "$HOME/Documents/My Library.bib")"
 
 # This pipe stream gets the number of bibtex entries in the file
 # It first prints the number of entries using awk and tail
 number="$(echo "$sepstring" | awk '{print NR}' RS='$' | tail -1)"
 
 # Remove the original file:
-rm "$1"
+# rm "$HOME/Documents/My Library.bib"
 
 # Loop over the number of entries;
 for ((i=2; i<$number+1; ++i));
@@ -25,6 +31,7 @@ do
 	oldpath="$(echo "$entry" | sed -e '/file =/!d' -e 's/.*\(\/home.*.pdf\):.*/\1/')"
 	oldname="$(echo "$oldpath" | sed 's/.*\///')"
 	entry="$(echo "$entry" | sed "s/$oldkey/$newkey/" | xargs -I {} change_field -f file -s "$newkey.pdf^" -b {} )"
+	entry="$(add_tag -s "$tag" -b "$entry")"
 	echo "$entry" >> "bib/$newkey.bib"
 	cp """$oldpath""" "pdf"
 	mv """pdf/$oldname""" "pdf/$newkey.pdf"
@@ -34,7 +41,6 @@ do
 	pp="$(pdfinfo "pdf/$newkey.pdf" | grep "Pages" | awk '{print $2}')"
 	for ((j=1; j<$pp+1; ++j));
 	do
-	echo $j
 	five_digit_page="$(printf "%05d\n" "$j")"
 	pdftotext -layout -f "$j" -l "$j" "pdf/$newkey.pdf" "txt/$newkey/$five_digit_page.txt"
 	sed -i "1i \@$newkey\^" "txt/$newkey/${five_digit_page}.txt"
