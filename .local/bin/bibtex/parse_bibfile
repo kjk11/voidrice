@@ -17,12 +17,13 @@ sepstring="$(sed -e 's/@/$\n@/' -e "/^$/d" "$HOME/Documents/My Library.bib")"
 # This pipe stream gets the number of bibtex entries in the file
 # It first prints the number of entries using awk and tail
 number="$(echo "$sepstring" | awk '{print NR}' RS='$' | tail -1)"
+number=$(echo "$number+1" | bc)
 
 # Remove the original file:
 # rm "$HOME/Documents/My Library.bib"
 
 # Loop over the number of entries;
-for ((i=2; i<$number+1; ++i));
+for ((i=2; i<$number; ++i));
 do
 	# This pipe stream uses awk to select the nth entry and deletes empty lines with sed
 	entry="$(echo "$sepstring" | awk "NR!=$i{next}1" RS='$' | sed "/^$/d")"
@@ -39,10 +40,11 @@ do
 	mkdir "txt/$newkey"
 	# Create txt files
 	pp="$(pdfinfo "pdf/$newkey.pdf" | grep "Pages" | awk '{print $2}')"
-	for ((j=1; j<$pp+1; ++j));
+	pp=$(echo $pp+1 | bc)
+	for ((j=1; j<$pp; ++j));
 	do
 	five_digit_page="$(printf "%05d\n" "$j")"
 	pdftotext -layout -f "$j" -l "$j" "pdf/$newkey.pdf" "txt/$newkey/$five_digit_page.txt"
 	sed -i "1i \@$newkey\^" "txt/$newkey/${five_digit_page}.txt"
 	done
-done >> "bibfile.bib"
+done  >> "bibfile.bib"
