@@ -1,0 +1,2 @@
+#!/bin/bash
+pandoc --citeproc --bibliography=$HOME/Documents/bibfile.bib -t pdf -i $1 -o - | zathura - &

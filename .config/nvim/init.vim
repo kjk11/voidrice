@@ -99,8 +99,8 @@ let g:citation_vim_bibtex_file="~/Documents/bibfile.bib"
 let g:citation_vim_mode="bibtex"
 let g:citation_vim_cache_path='~/.cache/nvim/citation.vim'
 let g:citation_vim_outer_prefix=""
-let g:citation_vim_inner_prefix="@"
-let g:citation_vim_suffix="^"
+let g:citation_vim_inner_prefix="(@"
+let g:citation_vim_suffix="^)"
 let g:citation_vim_description_format = "{} {} {}"
 let g:citation_vim_description_fields = ["author", "title", "key"]
 nmap <leader>u [unite]
@@ -135,6 +135,10 @@ noremap cf : ! zathura $(open_page <cWORD>) & <CR>
 
 " Open corresponding .pdf/.html or preview
 	map <leader>p :!opout <c-r>%<CR><CR>
+
+" On the fly compilation with pandoc
+" Perhaps reuse and tweak Luke's script for this in the future
+	map <leader>w :!flycompile %<CR>
 
 " Runs a script that cleans out tex build files whenever I close out of a .tex file.
 	autocmd VimLeave *.tex !texclear %

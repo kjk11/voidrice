@@ -16,4 +16,4 @@ done
 
 [ -z $pdf ] || echo $key | xargs open_page | xargs zathura
 [ -z $bibfile ] || nvim "$key.bib"
-echo $key
+echo $key | xclip -selection clipboard

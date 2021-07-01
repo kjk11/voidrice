@@ -15,4 +15,5 @@ lar $HOME/larbs # Directory for bootstrapping script
 bib $HOME/Documents/bib
 txt $HOME/Documents/txt
 pdf $HOME/Documents/pdf
+wik $HOME/Documents/vimwiki
 vv  ${XDG_VIDEOS_DIR:-$HOME/Videos}
