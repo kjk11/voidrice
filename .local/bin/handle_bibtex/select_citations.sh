@@ -1,0 +1,38 @@
+# tags: handle bibtex,
+
+# WORKS
+# This search functionality looks for .bib file in a folder, which match a set of specified conditions
+# The search syntax should look something like this: "tags: mathematics, analyticity" "author: nancy cartwright, hasok chang"
+# For now
+
+# $1 List of search queries separated by new lines 
+
+#!/bin/bash
+list="$(ls)"
+ 
+# Read search queries into array separated by semicolons 
+IFS=';' read -a queries <<< "$1"
+# Separate with new lines instead:
+# readarray -t queries <<< "$1"
+
+# Loop over queries
+for query in "${queries[@]}"; do
+
+	# Read search phrase into an array separated by commas; Array is called phrase
+	IFS=',' read -a phrase <<< ${query##*:" "}
+	# Read field that the query belongs to into variable field
+	field=${query%%:*}
+	# Loop over items in the phrase
+	for item in "${phrase[@]}"; do 
+	# The regular expression used for searching must ensure that if one tag is a substring of another, it is not included
+	# So searching for "Philosophy" should not yield results, which have the tag "Analytic Philosophy" or "Philosophy of Physics"
+	# Therefore there must be a comma after each item, which is included in the RegEx
+	# The tag must be preceeded either by "," or "{" plus whitespace 
+	list=$(echo "$list" | xargs grep -ilP "$field.*(,|\{)\s*$item,")
+	done
+
+done
+
+# Output the result
+echo "$list"
+

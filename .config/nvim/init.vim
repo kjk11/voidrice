@@ -64,6 +64,9 @@ noremap <unique> <M-8> 8gt
 noremap <unique> <M-9> 9gt
 noremap <unique> <M-0> 10gt
 
+" Make paragraph reflow along sentece boundaries:
+	map gq : s/\v[ ]*([^\.]*\.)/\1\r/g
+
 " Enable autocompletion:
 	set wildmode=longest,list,full
 " Disables automatic commenting on newline:
@@ -109,7 +112,7 @@ nnoremap <silent>[unite]ci	:	<C-u>Unite -buffer-name=citation-start-insert -defa
 nnoremap <silent>[unite]ct	:	<C-u>Unite -buffer-name=citation-start-insert -default-action=append citation/title<cr>
 nnoremap <silent>[unite]cn	:	<C-u>Unite -input=<C-R><C-W> -default-action=preview -force-immediately citation/combined<CR>
 nnoremap <silent>[unite]cx 	:	<C-u>exec "Unite -default-action=start citation/key:" . escape(input('Search Key : '),' ') <cr>
-noremap cf : ! zathura $(open_page <cWORD>) & <CR>
+noremap cf : ! zathura $(open_page "<cWORD>") & <CR>
 
 " Shortcutting split navigation, saving a keypress:
 	map <C-h> <C-w>h
