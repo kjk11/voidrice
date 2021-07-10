@@ -4,12 +4,10 @@
 import pdftotext
 import sys
 
-#file=str(sys.argv[1])
-#with open(file, "rb") as f:
-#    pdf = pdftotext.PDF(f)
-#text="\n\n".join(pdf)
-
-text="fj jfs ie l fjdklsja"
+file=str(sys.argv[1])
+with open(file, "rb") as f:
+    pdf = pdftotext.PDF(f)
+text="\n\n".join(pdf)
 
 class simhash:
 
