@@ -1,8 +1,8 @@
+#!/bin/bash
 # THINGS TO IMPROVE
 # Maybe ensure that the type of publication is capitalised
 # Remove nested curly brackets, they tend to cause problems with some scripts!
 
-#!/bin/bash
 ref()
 {
 [ -f $1 ] && input="$(cat $1)" || input="$1"

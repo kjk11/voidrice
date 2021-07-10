@@ -1,5 +1,5 @@
-# I could add separate options for zathura versus mupdf here
 #!/bin/bash
+# I could add separate options for zathura versus mupdf here
 stripped="$(echo $1 | sed -e 's/.*@//' -e 's/\.pdf//' -e 's/\.bib//' | tr -d '{},.')"
 key="$(echo "$stripped" | sed -e 's/\^.*//')"
 [[ "$1" == *'^'* ]] && page="$(echo "$stripped" | sed -e 's/.*\^//' -e 's/).*//')"

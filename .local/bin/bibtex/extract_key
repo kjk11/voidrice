@@ -1,8 +1,8 @@
+#!/bin/bash
 # WORKS
 # This script extracts the citation key from a bibtex entry
 # $1 Bibtex entry
 
-#!/bin/bash
 # Handle both files and stdi
 [ -f "$1" ] && input="$(cat $1)" || input="$1"
 # Cut everything up to the first comma

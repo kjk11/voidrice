@@ -1,3 +1,4 @@
+#!/bin/bash
 # DESRIPTION OF WHAT THIS SCRIPT DOES
 # Parses the new tags into an array and the existing tags into an array
 # Combines the two arrays removing duplicates
@@ -6,7 +7,6 @@
 # THINGS TO IMPROVE
 # Works fine, but solution for giving out the string does not seem the most elegant.
 
-#!/bin/bash
 addt()
 {
 # Take both file and stdi as input

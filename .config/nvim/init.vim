@@ -141,7 +141,7 @@ noremap cf : ! zathura $(open_page "<cWORD>") & <CR>
 
 " On the fly compilation with pandoc
 " Perhaps reuse and tweak Luke's script for this in the future
-	map <leader>w :!flycompile %<CR>
+map <leader>w :silent !{flycompile %} <CR>
 
 " Runs a script that cleans out tex build files whenever I close out of a .tex file.
 	autocmd VimLeave *.tex !texclear %

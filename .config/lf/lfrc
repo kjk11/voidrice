@@ -16,14 +16,14 @@ $lf -remote "send $id set previewer ${XDG_CONFIG_HOME:-$HOME/.config}/lf/scope"
 cmd open ${{
     case $(file --mime-type $f -b) in
 	image/vnd.djvu|application/pdf|application/octet-stream) setsid -f zathura $fx >/dev/null 2>&1 ;;
-        text/*) $EDITOR $fx;;
+        text/*) nvim $fx;;
 	image/x-xcf) setsid -f gimp $f >/dev/null 2>&1 ;;
 	image/svg+xml) display -- $f ;;
 	image/*) rotdir $f | grep -i "\.\(png\|jpg\|jpeg\|gif\|webp\|tif\|ico\)\(_large\)*$" | sxiv -aio 2>/dev/null | lf-select ;;
 	audio/*) mpv --audio-display=no $f ;;
 	video/*) setsid -f mpv $f -quiet >/dev/null 2>&1 ;;
 	application/pdf|application/vnd*|application/epub*) setsid -f zathura $fx >/dev/null 2>&1 ;;
-	application/pgp-encrypted) $EDITOR $fx ;;
+	application/pgp-encrypted) nvim $fx ;;
         *) for f in $fx; do setsid -f $OPENER $f >/dev/null 2>&1; done;;
     esac
 }}
@@ -87,14 +87,14 @@ map g top
 map D delete
 #map E extract
 #map C copyto
-#map M moveto
+map M moveto
 #map <c-n> push :mkdir<space>
 #map <c-r> reload
 #map <c-s> set hidden!
 map <enter> shell
 #map x $$f
 #map X !$f
-map o open $f
+map o open nvim $f
 map O open --ask $f
 map at push :add_tag<space>"
 #

@@ -1,9 +1,11 @@
+#!/bin/bash
+
 # This Script parses .bib files imported from Zotero into its individual entries and creates files for them
 # Add an option to add a list of tags to all the imported books
 # Add two different folders in the ~/Documents directory for PDFS and Citations
 # $1 .bib file to be parsed
 
-cd ~/Documents
+cd "~/Documents"
 
 while getopts t: opt; do
 case "$opt" in
@@ -19,23 +21,23 @@ sepstring="$(sed -e 's/@/$\n@/' -e "/^$/d" "$HOME/Documents/My Library.bib")"
 number="$(echo "$sepstring" | awk '{print NR}' RS='$' | tail -1)"
 number=$(echo "$number+1" | bc)
 
-# Remove the original file:
-# rm "$HOME/Documents/My Library.bib"
-
 # Loop over the number of entries;
+
 for ((i=2; i<$number; ++i));
 do
+
 	# This pipe stream uses awk to select the nth entry and deletes empty lines with sed
 	entry="$(echo "$sepstring" | awk "NR!=$i{next}1" RS='$' | sed "/^$/d")"
 	oldkey="$(extract_key "$entry")"
-	newkey="$(tr -dc A-Za-z0-9 </dev/random | head -c 30 ; echo '')"
 	oldpath="$(echo "$entry" | sed -e '/file =/!d' -e 's/.*\(\/home.*.pdf\):.*/\1/')"
 	oldname="$(echo "$oldpath" | sed 's/.*\///')"
+	newkey="$(simhash """$oldpath""")"
 	entry="$(echo "$entry" | sed "s/$oldkey/$newkey/" | xargs -I {} change_field -f file -s "$newkey.pdf^" -b {} )"
 	entry="$(add_tag -s "$tag" -b "$entry")"
 	echo "$entry" >> "bib/$newkey.bib"
-	cp """$oldpath""" "pdf"
-	mv """pdf/$oldname""" "pdf/$newkey.pdf"
+	# Change this to a cp command if you don't want to remove the files from Zotero
+	mv -i """$oldpath""" "pdf"
+	mv -i """pdf/$oldname""" "pdf/$newkey.pdf"
 	echo "$entry"
 	mkdir "txt/$newkey"
 	# Create txt files
@@ -47,4 +49,10 @@ do
 	pdftotext -layout -f "$j" -l "$j" "pdf/$newkey.pdf" "txt/$newkey/$five_digit_page.txt"
 	sed -i "1i \@$newkey\^" "txt/$newkey/${five_digit_page}.txt"
 	done
+
 done  >> "bibfile.bib"
+
+# Remove the original files and the zotero database:
+
+rm "$HOME/Documents/My Library.bib"
+rm "$HOME/Zotero/zotero.sqlite"

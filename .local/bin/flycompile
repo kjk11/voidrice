@@ -1,7 +1,6 @@
 #!/bin/bash
 filename="$(echo $1 | sed 's|.*/||g')"
 key="$(tr -dc A-Za-z0-9 </dev/random | head -c 30 ; echo '')"
-cd "$HOME"
 pandoc --citeproc --bibliography="$HOME/Documents/bibfile.bib" -t pdf -i "$1" -o "/tmp/$key.pdf"
-echo "$1" | entr pandoc --citeproc --bibliography="$HOME/Documents/bibfile.bib" -t pdf -i "$1" -o "/tmp/$key.pdf" &
-zathura "/tmp/$key.pdf" &
+( echo "$1" | entr pandoc --citeproc --bibliography="$HOME/Documents/bibfile.bib" -t pdf -i "$1" -o "/tmp/$key.pdf" ) & disown
+(zathura "/tmp/$key.pdf") & disown

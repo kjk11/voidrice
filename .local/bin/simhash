@@ -1,12 +1,15 @@
 #!/usr/bin/python
+# Modified from https://gist.github.com/indiejoseph/00693d0010f17da8da7d
 # coding=utf-8
 import pdftotext
 import sys
 
-file=str(sys.argv[1])
-with open(file, "rb") as f:
-    pdf = pdftotext.PDF(f)
-text="\n\n".join(pdf)
+#file=str(sys.argv[1])
+#with open(file, "rb") as f:
+#    pdf = pdftotext.PDF(f)
+#text="\n\n".join(pdf)
+
+text="fj jfs ie l fjdklsja"
 
 class simhash:
 
@@ -59,7 +62,6 @@ class simhash:
             if x == -1:
                 x = -2
             return x
-
 
 if __name__ == '__main__':
     hash = simhash(text.split())

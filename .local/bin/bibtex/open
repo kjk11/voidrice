@@ -6,14 +6,16 @@ bib="$(echo "$query" | xargs select_citations)"
 [ -z "$bib" ] && echo "No results"
 key="$(echo "$bib" | parallel cite | fzf | sed 's/^[^{]*{\([^{}]*\)}.*/\1/')"
 
-while getopts 'bpk' opt
+while getopts 'bpkc' opt
 do
 	case $opt in
 		p) pdf="yes" ;;
 		b) bibfile="yes" ;;
+		c) clipboard="yes" ;;
 	esac
 done
 
-[ -z $pdf ] || echo $key | xargs open_page | xargs zathura
-[ -z $bibfile ] || nvim "$key.bib"
-echo $key | xclip -selection clipboard
+[ -z $pdf ] || echo $key | xargs open_page | xargs zathura & disown
+[ -z $bibfile ] || $EDITOR "$key.bib" & disown
+[ -z $clipboard ] || echo $key | xclip -selection clipboard
+echo "$key"

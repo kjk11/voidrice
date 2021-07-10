@@ -1,3 +1,4 @@
+#!/bin/bash
 rm /tmp/search
 cd ~/Documents/txt
 # Take list of files as argument:
