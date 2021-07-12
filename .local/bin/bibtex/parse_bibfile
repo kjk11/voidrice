@@ -33,6 +33,8 @@ do
 	oldname="$(echo "$oldpath" | sed 's/.*\///')"
 	newkey="$(pdftotext -q """$oldpath""" - | tr -d " \n" | sed '/^$/d' | md5sum | sed 's/-//g' | tr -d " ")"
 	echo "$newkey"
+	# It also runs the reformatting script
+	entry="$(reformat -b "$entry")"
 
 	# What if the generated key is empty?
 	[ -z $newkey ] && echo "Generated Key is Empty. Check the following file: """$oldpath"""" && echo "Continue execution? (y/n)" && read response && [ "$response" == "y" ] && newkey="$(pdftotext -q """$oldpath""" - | tr -d " \n" | sed '/^$/d' | md5sum | sed 's/-//g' | tr -d " ")"
@@ -40,7 +42,7 @@ do
 	[ -z $newkey ] && exit 1
 
 	# Change this to a cp command if you don't want to remove the files from Zotero
-	[[ ! -f "pdf/$newkey" ]] && continue || cp """$oldpath""" "pdf"
+	[ -f "pdf/$newkey" ] && continue || cp """$oldpath""" "pdf"
 	mv -n """pdf/$oldname""" "pdf/$newkey.pdf"
 
 	# Change key and tags
@@ -49,8 +51,8 @@ do
 
 	# Add entry to new file in .bib folder
 	# Add entry to bibfile
-	echo "$entry" >> "bib/$newkey.bib" >> "bibfile.bib"
-	echo "$entry"
+	echo "$entry" >> "bib/$newkey.bib"
+	echo "$entry" >> "bibfile.bib"
 	mkdir "txt/$newkey"
 
 	# Create txt files

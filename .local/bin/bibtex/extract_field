@@ -6,7 +6,9 @@
 
 # Grep out the line, which contains the respective word
 [ -f "$2" ] && input="$(cat $2)" || input="$2"
-line="$(echo "$input" | grep -P "$1.*=")"
+line="$(echo "$input" | grep -wP "$1.*=")"
 # Cut the text within parentheses using sed command
 # Need to write a sed command that deals with nested parentheses here
-echo $line | sed 's/^[^{]*{\([^{}]*\)}.*/\1/'
+# echo $line | sed 's/^[^{]*{\([^{}]*\)}.*/\1/'
+line=${line#*\{}
+echo ${line%\}*}

@@ -16,6 +16,6 @@ do
 done
 
 [ -z $pdf ] || echo $key | xargs open_page | xargs zathura & disown
-[ -z $bibfile ] || $EDITOR "$key.bib" & disown
+[ -z $bibfile ] || $EDITOR "$key.bib"
 [ -z $clipboard ] || echo $key | xclip -selection clipboard
 echo "$key"

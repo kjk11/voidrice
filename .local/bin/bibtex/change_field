@@ -2,10 +2,11 @@
 # $1 is the field to be edited
 # $2 is the new content of the field
 # $3 is the bibtex
+
 changedf()
 {
 [ -f "$3" ] && input="$(cat $3)" || input="$3"
-new="$(echo "$input" | sed "s/$1.*=.*{.*}/$1 = {$2}/")"
+new="$(echo "$input" | sed "s|$1.*=.*{.*}|$1 = {$2}|")"
 [ -z "$(echo "$input" | grep -P "$1.*=")" ] && new="$(echo "$input" | sed "2i$1 = {$2},")"
 echo "$new"
 }
