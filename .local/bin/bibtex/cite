@@ -1,7 +1,8 @@
 #!/bin/bash
 # Generate citation from key
-cd $HOME/Documents/bib
+cd "$HOME/Documents/bib"
 author="$(extract_field "author" $1)"
+[ -z $author ] && author="$(extract_field "editor" $1)"
 date="$(extract_field "date" $1)"
 [ -z $date ] && date="$(extract_field "year" "$1")"
 title="$(extract_field "title" $1)"

@@ -5,7 +5,7 @@
 # Add two different folders in the ~/Documents directory for PDFS and Citations
 # $1 .bib file to be parsed
 
-cd "~/Documents"
+cd "$HOME/Documents"
 
 while getopts t: opt; do
 case "$opt" in
@@ -31,28 +31,41 @@ do
 	oldkey="$(extract_key "$entry")"
 	oldpath="$(echo "$entry" | sed -e '/file =/!d' -e 's/.*\(\/home.*.pdf\):.*/\1/')"
 	oldname="$(echo "$oldpath" | sed 's/.*\///')"
-	newkey="$(simhash """$oldpath""")"
-	entry="$(echo "$entry" | sed "s/$oldkey/$newkey/" | xargs -I {} change_field -f file -s "$newkey.pdf^" -b {} )"
-	entry="$(add_tag -s "$tag" -b "$entry")"
-	echo "$entry" >> "bib/$newkey.bib"
+	newkey="$(pdftotext -q """$oldpath""" - | tr -d " \n" | sed '/^$/d' | md5sum | sed 's/-//g' | tr -d " ")"
+	echo "$newkey"
+
+	# What if the generated key is empty?
+	[ -z $newkey ] && echo "Generated Key is Empty. Check the following file: """$oldpath"""" && echo "Continue execution? (y/n)" && read response && [ "$response" == "y" ] && newkey="$(pdftotext -q """$oldpath""" - | tr -d " \n" | sed '/^$/d' | md5sum | sed 's/-//g' | tr -d " ")"
+	# If new key is still empty exit the script
+	[ -z $newkey ] && exit 1
+
 	# Change this to a cp command if you don't want to remove the files from Zotero
-	mv -i """$oldpath""" "pdf"
-	mv -i """pdf/$oldname""" "pdf/$newkey.pdf"
+	[[ ! -f "pdf/$newkey" ]] && continue || cp """$oldpath""" "pdf"
+	mv -n """pdf/$oldname""" "pdf/$newkey.pdf"
+
+	# Change key and tags
+	entry="$(echo "$entry" | sed "s/$oldkey/$newkey/" | xargs -0 -I {} change_field -f file -s "$newkey.pdf^" -b {} )"
+	entry="$(add_tag -s "$tag" -b "$entry")"
+
+	# Add entry to new file in .bib folder
+	# Add entry to bibfile
+	echo "$entry" >> "bib/$newkey.bib" >> "bibfile.bib"
 	echo "$entry"
 	mkdir "txt/$newkey"
+
 	# Create txt files
 	pp="$(pdfinfo "pdf/$newkey.pdf" | grep "Pages" | awk '{print $2}')"
 	pp=$(echo $pp+1 | bc)
 	for ((j=1; j<$pp; ++j));
 	do
 	five_digit_page="$(printf "%05d\n" "$j")"
-	pdftotext -layout -f "$j" -l "$j" "pdf/$newkey.pdf" "txt/$newkey/$five_digit_page.txt"
+	pdftotext -q -layout -f "$j" -l "$j" "pdf/$newkey.pdf" "txt/$newkey/$five_digit_page.txt"
 	sed -i "1i \@$newkey\^" "txt/$newkey/${five_digit_page}.txt"
 	done
 
-done  >> "bibfile.bib"
+done
 
 # Remove the original files and the zotero database:
 
-rm "$HOME/Documents/My Library.bib"
-rm "$HOME/Zotero/zotero.sqlite"
+# rm "$HOME/Documents/My Library.bib"
+# rm "$HOME/Zotero/zotero.sqlite"

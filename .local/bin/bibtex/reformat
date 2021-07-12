@@ -8,7 +8,15 @@ ref()
 [ -f $1 ] && input="$(cat $1)" || input="$1"
 # The awk command removes whitespace at the beginning of lines
 # The sed command removes empty lines
-echo "$input" | awk '{$1=$1;print}' | sed '/^$/d'
+preformat="$(echo "$input" | awk '{$1=$1;print}' | sed '/^$/d')"
+# Now remove nested brackets
+fields="$(echo "$preformat" | grep "=" | sed 's/=.*//')"
+contents="$(echo "$fields" | xargs -I {} extract_field {} "$preformat" | tr -d "{}")"
+for number in $(seq 1 $(echo "$fields" | wc -l))
+do
+	preformat="$(change_field -f "$(echo "$fields" | head -"$number" | tail -1)" -s "$(echo "$contents" | head -"$number" | tail -1 )" -b "$preformat")"
+done
+echo "$preformat"
 }
 
 while getopts ib: opt; do
