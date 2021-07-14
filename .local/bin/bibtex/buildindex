@@ -1,0 +1,23 @@
+#!/bin/sh
+cd "$HOME/Documents/vimwiki"
+
+buildt()
+{
+searchterms="$(ls -R | grep ".md" | sed 's/\.md//')"
+extant_links="$(cat index.md | grep -oP "\[.*?\]\(.*?\)" | sed "s/\[.*\]//g" | tr -d '()')"
+array1=($extant_links)
+array2=($searchterms)
+for i in "${array1[@]}";
+do
+	array2=("${array2[@]/$i}")
+done
+
+array2=("${array2[@]/index}")
+
+for i in "${array2[@]}";
+do
+	echo "[$i]($i)"
+done
+}
+
+buildt | sed -e 's/\[.*\]()//g' -e '/^$/d' >> index.md
