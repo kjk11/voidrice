@@ -1,6 +1,7 @@
 #!/bin/bash
 filename="$(echo $1 | sed 's|.*/||g')"
 key="$(tr -dc A-Za-z0-9 </dev/random | head -c 30 ; echo '')"
-pandoc --citeproc --bibliography="$HOME/Documents/bibfile.bib" -t pdf -i "$1" -o "/tmp/$key.pdf"
-( echo "$1" | entr pandoc --citeproc --bibliography="$HOME/Documents/bibfile.bib" -t pdf -i "$1" -o "/tmp/$key.pdf" ) & disown
+iconv -t utf-8 -f utf-8 -c "$HOME/Documents/bibfile.bib" > "/tmp/bibfile.bib"
+pandoc --citeproc --bibliography="/tmp/bibfile.bib" -f markdown -t pdf -o "/tmp/$key.pdf" -i "$1"
+( echo "$1" | entr pandoc --citeproc --bibliography="/tmp/bibfile.bib" -t pdf -i "$1" -o "/tmp/$key.pdf" ) & disown
 (zathura "/tmp/$key.pdf") & disown
