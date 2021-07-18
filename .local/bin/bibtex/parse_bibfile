@@ -14,7 +14,7 @@ esac
 done
 
 # First introduce a string separated by $
-sepstring="$(sed -e 's/@/$\n@/' -e "/^$/d" "$HOME/Documents/My Library.bib")"
+sepstring="$(sed -e 's/^@/$\n@/' -e "/^$/d" "$HOME/Documents/My Library.bib")"
 
 # This pipe stream gets the number of bibtex entries in the file
 # It first prints the number of entries using awk and tail
