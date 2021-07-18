@@ -17,7 +17,7 @@ hit=$(echo "$preformat" | grep -vnP "(.*= {)|(^}$)|(@)" -m 1)
 num="$(echo "$hit" | sed 's/:.*//')"
 lin="$(echo "$hit" | grep -oP "(?<=:).*")"
 lin=""$(echo "$preformat" | sed ""$(($num-1))"q;d")" "$lin""
-preformat="$(echo "$preformat" | sed "$(($num-1)) s/.*/$lin/" | sed ""$num"d")"
+preformat="$(echo "$preformat" | sed "$(($num-1)) s|.*|$lin|" | sed ""$num"d")"
 done
 
 # Now remove nested brackets
