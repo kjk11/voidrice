@@ -2,11 +2,11 @@
 rm /tmp/search
 cd ~/Documents/txt
 # Take list of files as argument:
-grep="$(echo "$2" | xargs grep -r -m1 -C4 -wi "$1")"
+grep="$(echo "$2" | xargs grep -ar -m1 -C4 -wi "$1")"
 at="@"
 extract()
 {
-grep -P "^$1.*=" "$2" | sed 's/^[^{]*{\([^{}]*\)}.*/\1/'
+grep -aP "^$1.*=" "$2" | sed 's/^[^{]*{\([^{}]*\)}.*/\1/'
 }
 # Get the number of hits:
 number="$(echo "$grep" | awk '{print NR}' RS='--' | tail -1)"

@@ -11,18 +11,18 @@ ref()
 # The sed command removes empty lines
 preformat="$(echo "$input" | awk '{$1=$1;print}' | sed '/^$/d')"
 
-while [ ! -z "$(echo "$preformat" | grep -vnP "(.*= {)|(^}$)|(@)" -m 1)" ];
+while [ ! -z "$(echo "$preformat" | grep -vnaP "(.*= {)|(^}$)|(@)" -m 1)" ];
 do
-hit=$(echo "$preformat" | grep -vnP "(.*= {)|(^}$)|(@)" -m 1)
+hit=$(echo "$preformat" | grep -vnaP "(.*= {)|(^}$)|(@)" -m 1)
 num="$(echo "$hit" | sed 's/:.*//')"
-lin="$(echo "$hit" | grep -oP "(?<=:).*")"
+lin="$(echo "$hit" | grep -oaP "(?<=:).*")"
 lin=""$(echo "$preformat" | sed ""$(($num-1))"q;d")" "$lin""
 preformat="$(echo "$preformat" | sed "$(($num-1)) s|.*|$lin|" | sed ""$num"d")"
 done
 
 # Now remove nested brackets
 # Separate out contents of each entry and remove curly brackets
-fields="$(echo "$preformat" | grep "=" | sed 's/\=.*//')"
+fields="$(echo "$preformat" | grep -a "=" | sed 's/\=.*//')"
 contents="$(echo "$fields" | xargs -I % extract_field "%" "$preformat" | tr -d "{}")"
 
 # Substitute the entries back in
