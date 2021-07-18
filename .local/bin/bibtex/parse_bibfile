@@ -28,13 +28,14 @@ do
 
 	# This pipe stream uses awk to select the nth entry and deletes empty lines with sed
 	entry="$(echo "$sepstring" | awk "NR!=$i{next}1" RS='$' | sed "/^$/d")"
-	# It also runs the reformatting script
-	entry="$(reformat -b "$entry")"
 	oldkey="$(extract_key "$entry")"
-	oldpath="$(echo "$entry" | sed -e '/file =/!d' -e 's/.*\(\/home.*.pdf\):.*/\1/')"
+	oldpath="$(echo "$entry" | sed -e '/file =/!d' -e 's/.*\(\/home.*\.pdf\):.*/\1/')"
 	oldname="$(echo "$oldpath" | sed 's/.*\///')"
 	newkey="$(pdftotext -q """$oldpath""" - | tr -d " \n" | sed '/^$/d' | md5sum | sed 's/-//g' | tr -d " ")"
 	echo "$newkey"
+
+	# It also runs the reformatting script
+	entry="$(reformat -b "$entry")"
 
 	# What if the generated key is empty?
 	[ $newkey == d784fa8b6d98d27699781bd9a7cf19f0 ] && echo "Generated Key is Empty. Check the following file: """$oldpath"""" && echo "Continue execution? (y/n)" && read response && [ "$response" == "y" ] && newkey="$(pdftotext -q """$oldpath""" - | tr -d " \n" | sed '/^$/d' | md5sum | sed 's/-//g' | tr -d " ")"
