@@ -30,6 +30,8 @@ do
 	entry="$(echo "$sepstring" | awk "NR!=$i{next}1" RS='$' | sed "/^$/d")"
 	oldkey="$(extract_key "$entry")"
 	oldpath="$(echo "$entry" | sed -e '/file =/!d' -e 's/.*\(\/home.*\.pdf\):.*/\1/')"
+	# For some weird reason Zotero sometimes puts backslashes into the filenames, which are not actually there:
+	oldpath="$(echo $oldpath | tr -d "\\" 2>/dev/null)"
 	echo "$oldpath"
 	oldname="$(echo "$oldpath" | sed 's/.*\///')"
 	newkey="$(pdftotext -l 20 -q """$oldpath""" - | tr -d " \n" | sed '/^$/d' | md5sum | sed 's/-//g' | tr -d " ")"
@@ -58,7 +60,7 @@ do
 	mkdir "txt/$newkey"
 
 	# Create txt files
-	pp="$(pdfinfo "pdf/$newkey.pdf" | grep "Pages" | awk '{print $2}')"
+	pp="$(pdfinfo "pdf/$newkey.pdf" | grep -a "Pages" | awk '{print $2}')"
 	pp=$(echo $pp+1 | bc)
 	for ((j=1; j<$pp; ++j));
 	do
