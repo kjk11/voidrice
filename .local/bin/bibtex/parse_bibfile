@@ -30,8 +30,9 @@ do
 	entry="$(echo "$sepstring" | awk "NR!=$i{next}1" RS='$' | sed "/^$/d")"
 	oldkey="$(extract_key "$entry")"
 	oldpath="$(echo "$entry" | sed -e '/file =/!d' -e 's/.*\(\/home.*\.pdf\):.*/\1/')"
+	echo "$oldpath"
 	oldname="$(echo "$oldpath" | sed 's/.*\///')"
-	newkey="$(pdftotext -q """$oldpath""" - | tr -d " \n" | sed '/^$/d' | md5sum | sed 's/-//g' | tr -d " ")"
+	newkey="$(pdftotext -l 20 -q """$oldpath""" - | tr -d " \n" | sed '/^$/d' | md5sum | sed 's/-//g' | tr -d " ")"
 	echo "$newkey"
 
 	# It also runs the reformatting script
