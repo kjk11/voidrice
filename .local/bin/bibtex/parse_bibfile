@@ -30,7 +30,7 @@ do
 	entry="$(echo "$sepstring" | awk "NR!=$i{next}1" RS='$' | sed "/^$/d")"
 	oldkey="$(extract_key "$entry")"
 	# For some weird reason Zotero sometimes puts backslashes into the filenames, which are not actually there. This is dealt with with the tr command
-	oldpath="$(echo "$entry" | sed -e '/file =/!d' -e 's/.*\(\/home.*\.pdf\):.*/\1/' | tr -d "\\" 2>/dev/null)"
+	oldpath="$(echo "$entry" | sed -e '/file =/!d' -e 's/.*\(\/home.*\.pdf\):.*/\1/' -e 's/.*\(\/mnt.*\.pdf\):.*/\1/' | tr -d "\\" 2>/dev/null)"
 	echo "$oldpath"
 	oldname="$(echo "$oldpath" | sed 's/.*\///')"
 	# Check if the pdf is ocr-ed, otherwise run an ocr
