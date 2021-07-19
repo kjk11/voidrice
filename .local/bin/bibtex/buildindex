@@ -3,20 +3,24 @@ cd "$HOME/Documents/vimwiki"
 
 buildt()
 {
-searchterms="$(ls -R | grep ".md" | sed 's/\.md//')"
+searchterms="$(tree -if | grep ".md" | sed 's/\.md//' | sed 's/\.\///')"
 extant_links="$(cat index.md | grep -oP "\[.*?\]\(.*?\)" | sed "s/\[.*\]//g" | tr -d '()')"
 array1=($extant_links)
 array2=($searchterms)
-for i in "${array1[@]}";
+for i in "${array1[@]}"
 do
-	array2=("${array2[@]/$i}")
+	for j in "${!array2[@]}"
+	do
+		if [[ "${array2[j]}" == "$i" ]]
+		then
+		unset 'array2[j]'
+		fi
+	done
 done
-
 array2=("${array2[@]/index}")
-
 for i in "${array2[@]}";
 do
-	echo "[$i]($i)"
+	echo "[$(echo $i | sed 's|.*/||g' )]($i)"
 done
 }
 
