@@ -113,6 +113,7 @@ nnoremap <silent>[unite]ct	:	<C-u>Unite -buffer-name=citation-start-insert -defa
 nnoremap <silent>[unite]cn	:	<C-u>Unite -input=<C-R><C-W> -default-action=preview -force-immediately citation/combined<CR>
 nnoremap <silent>[unite]cx 	:	<C-u>exec "Unite -default-action=start citation/key:" . escape(input('Search Key : '),' ') <cr>
 noremap cf : ! zathura $(open_page "<cWORD>") & <CR>
+noremap cb : ! open_bib "<cWORD>" & <CR>
 
 " Shortcutting split navigation, saving a keypress:
 	map <C-h> <C-w>h
@@ -145,6 +146,9 @@ map <leader>w :silent !{flycompile %} <CR>
 
 " Runs a script that cleans out tex build files whenever I close out of a .tex file.
 	autocmd VimLeave *.tex !texclear %
+
+" Keybinding to open Vimwiki link in new tab
+map <C-L> :VimwikiTabnewLink<CR>
 
 " Ensure files are read as what I want:
 	let g:vimwiki_ext2syntax = {'.Rmd': 'markdown', '.rmd': 'markdown','.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}

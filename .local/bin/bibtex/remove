@@ -1,0 +1,6 @@
+#!/bin/sh
+# This script removes all files associated with a key
+# It does not check for other .bib files that link to the respective pdf
+rm "$HOME/Documents/pdf/$1.pdf"
+rm "$HOME/Documents/bib/$1.bib"
+rm -R "$HOME/Documents/txt/$1"
