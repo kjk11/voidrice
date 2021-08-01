@@ -4,7 +4,7 @@ query="$(ls | xargs cat | sed -e '/tags/!d' -e 's/.*{\(.*\)}.*/\1/' -e 's/,/\n/g
 bib="$(echo "$query" | xargs select_citations)"
 # [ -z "$query" ] && echo "Empty query"
 [ -z "$bib" ] && echo "No results"
-key="$(echo "$bib" | parallel cite | fzf | sed 's/^[^{]*{\([^{}]*\)}.*/\1/')"
+key="$(echo "$bib" | parallel cite | fzf -m | sed 's/^[^{]*{\([^{}]*\)}.*/\1/')"
 
 while getopts 'bp' opt
 do
