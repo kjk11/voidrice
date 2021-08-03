@@ -1,4 +1,6 @@
 #!/bin/bash
+# Use date and time as a filename so I can run this script several times at once
+# I found some sort of bug when I was searching for the word calcium
 rm /tmp/search
 cd ~/Documents/txt
 # Take list of files as argument:

@@ -1,0 +1,38 @@
+#!/bin/bash
+# Add ocr if not already there
+	[[ $(pdffonts """$1""" 2> /dev/null | wc -l) == 2 ]] && ocrmypdf -f -l eng+deu --rotate-pages --deskew """$1""" """$1"""
+# Generate a key for the pdf file
+	newkey="$(pdftotext -l 20 -q """$1""" - | tr -d " \n" | sed '/^$/d' | md5sum | sed 's/-//g' | tr -d " ")"
+	echo "$newkey"
+# Move pdf accordingly
+	mv "$1" "$newkey.pdf"
+
+# User input bibtex
+nvim "$newkey.bib"
+
+# User input tags:
+echo "Enter tags:"
+read -p "$tag"
+
+# Reformat the bibtex entry
+	# Quick fix: Surround = with spaces, otherwise reformatting won't work
+	entry="$(cat $newkey.bib | sed "s/=/ = /" | iconv -cf utf-8 -t utf-8)"
+	oldkey="$(extract_key "$entry")"
+	entry="$(reformat -b "$entry")"
+	entry="$(echo "$entry" | sed "s/$oldkey/$newkey/" | xargs -0 -I {} change_field -f file -s "$newkey.pdf^" -b {} )"
+	entry="$(add_tag -s "$tag" -b "$entry")"
+echo "$entry" > "$newkey.bib"
+
+# Create txt directory
+
+mkdir "$newkey"
+
+# Create txt files
+pp="$(pdfinfo "$newkey.pdf" | grep -a "Pages:" | awk '{print $2}')"
+pp=$(echo $pp+1 | bc)
+for ((j=1; j<$pp; ++j));
+do
+five_digit_page="$(printf "%05d\n" "$j")"
+pdftotext -q -layout -f "$j" -l "$j" "$newkey.pdf" "$newkey/$five_digit_page.txt"
+sed -i "1i \@$newkey\^" "$newkey/${five_digit_page}.txt"
+done
