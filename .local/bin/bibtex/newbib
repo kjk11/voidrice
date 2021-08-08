@@ -1,18 +1,29 @@
 #!/bin/bash
+cd $HOME/Downloads
+file="$(ls -t | head -n 1)"
+echo "$file"
+zathura "$file"
+# Get confirmation
+echo "Should the pdf be added to the collection?"
+read var
+[[ "$var" == yes ]] || exit 0;
+
 # Add ocr if not already there
-	[[ $(pdffonts """$1""" 2> /dev/null | wc -l) == 2 ]] && ocrmypdf -f -l eng+deu --rotate-pages --deskew """$1""" """$1"""
+	[[ $(pdffonts """$file""" 2> /dev/null | wc -l) == 2 ]] && ocrmypdf -f -l eng+deu --rotate-pages --deskew """$file""" """$file"""
 # Generate a key for the pdf file
-	newkey="$(pdftotext -l 20 -q """$1""" - | tr -d " \n" | sed '/^$/d' | md5sum | sed 's/-//g' | tr -d " ")"
-	echo "$newkey"
+	newkey="$(pdftotext -l 20 -q """$file""" - | tr -d " \n" | sed '/^$/d' | md5sum | sed 's/-//g' | tr -d " ")"
+
+echo "$newkey"
+
 # Move pdf accordingly
-	mv "$1" "$newkey.pdf"
+	mv "$file" "$newkey.pdf"
 
 # User input bibtex
 nvim "$newkey.bib"
 
 # User input tags:
 echo "Enter tags:"
-read -p "$tag"
+read tag
 
 # Reformat the bibtex entry
 	# Quick fix: Surround = with spaces, otherwise reformatting won't work
@@ -36,3 +47,9 @@ five_digit_page="$(printf "%05d\n" "$j")"
 pdftotext -q -layout -f "$j" -l "$j" "$newkey.pdf" "$newkey/$five_digit_page.txt"
 sed -i "1i \@$newkey\^" "$newkey/${five_digit_page}.txt"
 done
+
+mv -i "$newkey.bib" "$HOME/Documents/bib/$newkey.bib"
+mv -i "$newkey.pdf" "$HOME/Documents/pdf/$newkey.pdf"
+mv -i "$newkey" "$HOME/Documents/txt/$newkey"
+echo "$entry" >> "$HOME/Documents/bibfile.bib"
+echo "$newkey" | xclip -selection clipboard

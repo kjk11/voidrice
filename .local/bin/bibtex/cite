@@ -1,11 +1,12 @@
 #!/bin/bash
 # Generate citation from key
 cd "$HOME/Documents/bib"
-author="$(extract_field "author" "$1")"
-[ -z "$author" ] && author="$(extract_field "editor" "$1")"
-date="$(extract_field "date" "$1")"
-[ -z "$date" ] && date="$(extract_field "year" "$1")"
-title="$(extract_field "title" "$1")"
-publisher="$(extract_field "publisher" "$1")"
-key=$(echo "$1" | sed -e 's/\.bib//g')
+stripped="$(echo $1 | sed -e 's/.*@//' -e 's/\.pdf//' -e 's/\.bib//' | tr -d '{},.^' | sed -e 's/.*/&\.bib/')"
+author="$(extract_field "author" "$stripped")"
+[ -z "$author" ] && author="$(extract_field "editor" "$stripped")"
+date="$(extract_field "date" "$stripped")"
+[ -z "$date" ] && date="$(extract_field "year" "$stripped")"
+title="$(extract_field "title" "$stripped")"
+publisher="$(extract_field "publisher" "$stripped")"
+key=$(echo "$stripped" | sed -e 's/\.bib//g')
 echo "$author ; $date ; $title ; $publisher ; {$key}"
