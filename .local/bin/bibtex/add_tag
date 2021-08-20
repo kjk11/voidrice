@@ -11,6 +11,8 @@ addt()
 {
 # Take both file and stdi as input
 [ -f "$2" ] && entry="$(cat "$2")" || entry="$2"
+# Check again if it is just the bare key without the .bib extension
+[ -f "$2.bib" ] && entry="$(cat "$2.bib")"
 
 # Parse all the tags into two arrays
 # tr command converts everything into lower case in order to avoid cases like:
@@ -41,4 +43,5 @@ case "$opt" in
 esac
 done
 
-[ "$change" == 1 ] && [ -f "$bibtex" ] && echo "$(addt "$newtag" "$bibtex")" > "$bibtex" || addt "$newtag" "$bibtex"
+cd ~/Documents/bib
+[ "$change" == 1 ] && [[ -f "$bibtex" || -f "$bibtex.bib" ]] && echo "$(addt "$newtag" "$bibtex")" > "$bibtex" || addt "$newtag" "$bibtex"

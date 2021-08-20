@@ -1,7 +1,8 @@
 #!/bin/bash
 # Generate citation from key
 cd "$HOME/Documents/bib"
-stripped="$(echo $1 | sed -e 's/.*@//' -e 's/\.pdf//' -e 's/\.bib//' | tr -d '{},.^' | sed -e 's/.*/&\.bib/')"
+stripped="$(echo $1 | sed 's/^[^(]*(\([^()]*\)).*/\1/')"
+stripped="$(echo "$stripped" | sed -e 's/.*@//' -e 's/\.pdf//' -e 's/\.bib//' -e 's/\^.*//' | tr -d '{},.' | sed -e 's/.*/&\.bib/')"
 author="$(extract_field "author" "$stripped")"
 [ -z "$author" ] && author="$(extract_field "editor" "$stripped")"
 date="$(extract_field "date" "$stripped")"

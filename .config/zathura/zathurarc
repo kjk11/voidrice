@@ -13,3 +13,4 @@ map J zoom out
 map i recolor
 map p print
 map g goto top
+map <C-o> focus_inputbar ":exec echo $FILE | sed 's/\.pdf//' | x-clip -selection clipboard"

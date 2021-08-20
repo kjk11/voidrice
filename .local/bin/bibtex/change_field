@@ -5,7 +5,10 @@
 
 changedf()
 {
+# Handle both file and bibtex entry
 [ -f "$3" ] && input="$(cat $3)" || input="$3"
+# Check again if it is just the bare key without the .bib extension
+[ -f "$3.bib" ] && input="$(cat "$3.bib")"
 new="$(echo "$input" | sed "s|$1.*=.*{.*}|$1 = {$2}|")"
 [ -z "$(echo "$input" | grep -aP "$1.*=")" ] && new="$(echo "$input" | sed "2i$1 = {$2},")"
 echo "$new"
@@ -20,4 +23,5 @@ case "$opt" in
 esac
 done
 
-[ "$change" == 1 ] && [ -f "$bibtex" ] && echo "$(changedf "$field" "$substitution" "$bibtex")" > "$bibtex" || changedf "$field" "$substitution" "$bibtex"
+cd ~/Documents/bib
+[ "$change" == 1 ] && [[ -f "$bibtex" || -f "$bibtex.bib" ]] && echo "$(changedf "$field" "$substitution" "$bibtex")" > "$bibtex" || changedf "$field" "$substitution" "$bibtex"

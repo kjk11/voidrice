@@ -1,20 +1,31 @@
 #!/bin/bash
-cd $HOME/Documents/bib
-query="$(ls | xargs cat | sed -e '/tags/!d' -e 's/.*{\(.*\)}.*/\1/' -e 's/,/\n/g' | sed -e 's/\s*\(\)\s*/\1/' -e '/^$/d' | sort | uniq | fzf -m | awk -F, '{print "\"tags: " $1 "\""}' | tr '\n' ';')"
-bib="$(echo "$query" | xargs select_citations)"
-# [ -z "$query" ] && echo "Empty query"
-[ -z "$bib" ] && echo "No results"
-key="$(echo "$bib" | parallel cite | fzf -m | sed 's/^[^{]*{\([^{}]*\)}.*/\1/')"
-
-while getopts 'bp' opt
+while getopts 'bpt' opt
 do
 	case $opt in
 		p) pdf="yes" ;;
 		b) bibfile="yes" ;;
+		t) terminate="yes" ;;
 	esac
 done
 
-[ -z $pdf ] || echo $key | xargs open_page | xargs zathura & disown
-[ -z $bibfile ] || $EDITOR "$key.bib"
-echo $key | xclip -selection clipboard
-echo "$key"
+while true
+do
+	cd $HOME/Documents/bib
+	clear
+	[ -z $pdf ] || echo "Open pdf"
+	[ -z $bibfile ] || echo "Open bibtex"
+	query="$(ls | xargs cat | sed -e '/tags/!d' -e 's/.*{\(.*\)}.*/\1/' -e 's/,/\n/g' | sed -e 's/\s*\(\)\s*/\1/' -e '/^$/d' | sort | uniq | fzf -m | awk -F, '{print "\"tags: " $1 "\""}' | tr '\n' ';')"
+	bib="$(echo "$query" | xargs select_citations)"
+	# [ -z "$query" ] && echo "Empty query"
+	[ -z "$bib" ] && echo "No results"
+	# key="$(echo "$bib" | parallel cite | fzf -m | sed 's/^[^{]*{\([^{}]*\)}.*/\1/')"
+	key="$(echo "$bib" | parallel cite | fzf -m | awk -F"{|}" '{print $2}')"
+	[[ -z "$pdf" || -z "$key" ]] || echo "$key" | xargs open_page | xargs st nohup >/dev/null 2>&1 zathura & disown
+	[[ -z "$bibfile" || -z "$key" ]] || $EDITOR "$key.bib"
+	[ -z "$key" ] || echo "$key" | xclip -selection clipboard
+	[ -z "$key" ] || echo "$key"
+	read enter && [ -z "$enter" ] || break
+	[ -z "$terminate" ] || break
+done
+
+clear
