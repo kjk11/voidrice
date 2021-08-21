@@ -96,6 +96,14 @@ noremap <unique> <M-0> 10gt
 	imap <leader><leader>i <esc>:call ToggleIPA()<CR>a
 	nm <leader><leader>q :call ToggleProse()<CR>
 
+" Settings for folds
+" Removes coloured background from folds
+nnoremap <space> za
+vnoremap <space> za
+highlight Folded term=standout ctermfg=14 ctermbg=0
+autocmd BufWinLeave *.* mkview
+" autocmd BufWinEnter *.* silent loadview
+
 " citation.vim:
 
 let g:citation_vim_bibtex_file="~/Documents/bibfile.bib"
@@ -114,6 +122,7 @@ nnoremap <silent>[unite]cn	:	<C-u>Unite -input=<C-R><C-W> -default-action=previe
 nnoremap <silent>[unite]cx 	:	<C-u>exec "Unite -default-action=start citation/key:" . escape(input('Search Key : '),' ') <cr>
 noremap cf : ! zathura $(open_page "<cWORD>") & <CR>
 noremap cb : ! open_bib "<cWORD>" & <CR>
+noremap cc : .! cite "<C-R>"
 
 " Shortcutting split navigation, saving a keypress:
 	map <C-h> <C-w>h
