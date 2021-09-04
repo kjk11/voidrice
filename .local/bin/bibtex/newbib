@@ -9,14 +9,22 @@ read var
 [[ "$var" == yes ]] || exit 0;
 
 # Add ocr if not already there
-	[[ $(pdffonts """$file""" 2> /dev/null | wc -l) == 2 ]] && ocrmypdf -f -l eng+deu --rotate-pages --deskew """$file""" """$file"""
+[[ $(pdffonts """$file""" 2> /dev/null | wc -l) == 2 ]] && ocrmypdf -f -l eng+deu --rotate-pages --deskew """$file""" """$file"""
 # Generate a key for the pdf file
-	newkey="$(pdftotext -l 20 -q """$file""" - | tr -d " \n" | sed '/^$/d' | md5sum | sed 's/-//g' | tr -d " ")"
+newkey="$(pdftotext -l 20 -q """$file""" - | tr -d " \n" | sed '/^$/d' | md5sum | sed 's/-//g' | tr -d " ")"
 
 echo "$newkey"
 
 # Move pdf accordingly
-	mv "$file" "$newkey.pdf"
+mv "$file" "$newkey.pdf"
+st nohup >/dev/null 2>&1 zathura "$newkey.pdf" & disown
+
+# Attempt to get citation via doi
+
+getbib "$newkey.pdf" > "$newkey.bib"
+
+# Attempt to get citation information from gscholar:
+[[ "$(cat $newkey.bib)" == "Resource not found." ]] && select_scholar "$newkey.pdf" > "$newkey.bib"
 
 # User input bibtex
 nvim "$newkey.bib"
@@ -26,12 +34,12 @@ echo "Enter tags:"
 read tag
 
 # Reformat the bibtex entry
-	# Quick fix: Surround = with spaces, otherwise reformatting won't work
-	entry="$(cat $newkey.bib | sed "s/=/ = /" | iconv -cf utf-8 -t utf-8)"
-	oldkey="$(extract_key "$entry")"
-	entry="$(reformat -b "$entry")"
-	entry="$(echo "$entry" | sed "s/$oldkey/$newkey/" | xargs -0 -I {} change_field -f file -s "$newkey.pdf^" -b {} )"
-	entry="$(add_tag -s "$tag" -b "$entry")"
+# Quick fix: Surround = with spaces, otherwise reformatting won't work
+entry="$(cat $newkey.bib | sed "s/=/ = /" | iconv -cf utf-8 -t utf-8)"
+oldkey="$(extract_key "$entry")"
+entry="$(reformat -b "$entry")"
+entry="$(echo "$entry" | sed "s/$oldkey/$newkey/" | xargs -0 -I {} change_field -f file -s "$newkey.pdf^" -b {} )"
+entry="$(add_tag -s "$tag" -b "$entry")"
 echo "$entry" > "$newkey.bib"
 
 # Create txt directory
@@ -53,3 +61,4 @@ mv -i "$newkey.pdf" "$HOME/Documents/pdf/$newkey.pdf"
 mv -i "$newkey" "$HOME/Documents/txt/$newkey"
 echo "$entry" >> "$HOME/Documents/bibfile.bib"
 echo "$newkey" | xclip -selection clipboard
+rm nohup.out

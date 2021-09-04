@@ -10,4 +10,4 @@ date="$(extract_field "date" "$stripped")"
 title="$(extract_field "title" "$stripped")"
 publisher="$(extract_field "publisher" "$stripped")"
 key=$(echo "$stripped" | sed -e 's/\.bib//g')
-echo "$author ; $date ; $title ; $publisher ; {$key}"
+echo "$title ; $author ; $date ; $publisher ; {$key}"

@@ -13,4 +13,7 @@ map J zoom out
 map i recolor
 map p print
 map g goto top
-map <C-o> focus_inputbar ":exec echo $FILE | sed 's/\.pdf//' | x-clip -selection clipboard"
+# This doesn't work
+map <C-c> feedkeys ":exec sh -c \"echo $FILE | sed 's/\.pdf//' | xclip -i -sel clip\"<Return>"
+map <C-b> feedkeys ":exec sh -c \"echo $FILE | sed -e 's/\.pdf/.bib/' -e "s*$HOME/Documents/pdf/**" -e "s*^*$HOME/Documents/bib/*" | xargs -I {} nohup st nvim {}\"<Return>"
+#map <C-b> focus_inputbar ":exec echo $FILE | sed -e 's/\.pdf//' -e "s|^|$HOME/Documents/bib/|" | x-clip -selection clipboard"

@@ -5,7 +5,7 @@ config.load_autoconfig(False)
 c.downloads.location.directory = '$HOME/Downloads'
 
 # Page to open if :open -t/-b/-w is used without URL. Use `about:blank`
-c.url.default_page = 'https://searx.info/'
+c.url.default_page = 'https://lite.duckduckgo.com/lite'
 
 # Search engines which can be used via the address bar. Maps a search
 # engine name (such as `DEFAULT`, or `ddg`) to a URL with a `{}`
@@ -23,6 +23,27 @@ c.url.start_pages = 'https://lite.duckduckgo.com/lite'
 
 # Set dark mode
 config.set("colors.webpage.darkmode.enabled", True)
+
+# Privacy-harden everything
+
+## Disable javascript by default
+config.set("content.javascript.enabled", False)
+
+## Disable cookies
+config.set("content.cookies.accept", "never")
+config.set("content.cookies.store", False)
+
+## Disable HTML5 cache
+config.set("content.cache.appcache", False)
+
+## Disable HTML Storage and Web SQL cache
+config.set("content.local_storage", False)
+
+## Enable private browsing
+config.set("content.private_browsing", True)
+
+## Use tor
+config.set("content.proxy", "socks://localhost:9050/")
 
 # Bindings for normal mode
 # I like to bind semicolon to search to make it easier to reach:
