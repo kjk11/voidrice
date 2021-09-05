@@ -23,7 +23,7 @@ do
 	[ -z "$bib" ] && echo "No results"
 	# key="$(echo "$bib" | parallel cite | fzf -m | sed 's/^[^{]*{\([^{}]*\)}.*/\1/')"
 	key="$(echo "$bib" | parallel cite | fzf -m | awk -F"{|}" '{print $2}')"
-	[[ -z "$pdf" || -z "$key" ]] || echo "$key" | parallel xargs open_page | parallel xargs st nohup >/dev/null 2>&1 zathura & disown
+	[[ -z "$pdf" || -z "$key" ]] || echo "$key" | parallel xargs open_page | xargs st nohup >/dev/null 2>&1 zathura & disown
 	[[ -z "$bibfile" || -z "$key" ]] || echo "$key" | sed 's/$/.bib/' | parallel xargs st nvim
 	[ -z "$key" ] || echo "$key" | xclip -selection clipboard
 	[ -z "$key" ] || echo "$key"
