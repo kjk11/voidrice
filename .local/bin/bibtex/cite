@@ -9,5 +9,7 @@ date="$(extract_field "date" "$stripped")"
 [ -z "$date" ] && date="$(extract_field "year" "$stripped")"
 title="$(extract_field "title" "$stripped")"
 publisher="$(extract_field "publisher" "$stripped")"
+[ -z "$publisher" ] && publisher="$(extract_field "journaltitle" "$stripped")"
+[ -z "$publisher" ] && publisher="$(extract_field "journal" "$stripped")"
 key=$(echo "$stripped" | sed -e 's/\.bib//g')
 echo "$title ; $author ; $date ; $publisher ; {$key}"
