@@ -124,6 +124,10 @@ noremap cf : ! zathura $(open_page "<cWORD>") & <CR>
 noremap cb : ! open_bib "<cWORD>" & <CR>
 noremap cc : .! cite "<C-R>"
 
+" Insert card template for obsidian to anki script
+
+noremap <leader>mc : r ~/.config/nvim/cardtemplate <CR>
+
 " Shortcutting split navigation, saving a keypress:
 	map <C-h> <C-w>h
 	map <C-j> <C-w>j
