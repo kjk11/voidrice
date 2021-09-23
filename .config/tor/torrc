@@ -4,11 +4,18 @@ DataDirectory /var/lib/tor
 VirtualAddrNetwork 10.192.0.0/10
 AutomapHostsOnResolve 1
 AutomapHostsSuffixes .exit,.onion
-TransPort 127.0.0.1:9040 IsolateClientAddr IsolateSOCKSAuth IsolateClientProtocol IsolateDestPort IsolateDestAddr
-SocksPort 127.0.0.1:9050 IsolateClientAddr IsolateSOCKSAuth IsolateClientProtocol IsolateDestPort IsolateDestAddr
+TransPort 127.0.0.1:9040
+SocksPort 127.0.0.1:9050
 ControlPort 9051
-HashedControlPassword 16:FDE8ED505C45C8BA602385E2CA5B3250ED00AC0920FEC1230813A1F86F
+HashedControlPassword 16:858924345607340260F6F262C76DC301A0BFC6B4BFCEFFC304DA7A8191
 DNSPort 127.0.0.1:9053
+# Newsboat
+SocksPort 9060
+# Qutebrowser secure
+SocksPort 9061
+SocksPort 9062
+SocksPort 9063
+SocksPort 9064
 # Sandbox 1 - tor package is not built with --enable-seccomp required to use this option.
 HardwareAccel 1
 TestSocks 1

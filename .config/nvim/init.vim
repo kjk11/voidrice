@@ -124,6 +124,9 @@ noremap cf : ! zathura $(open_page "<cWORD>") & <CR>
 noremap cb : ! open_bib "<cWORD>" & <CR>
 noremap cc : .! cite "<C-R>"
 
+" Create new bibtex entry, like incollection
+noremap <leader>mi :!key=$(keygen); cat % >> "$HOME/Documents/bib/$key.bib"; $EDITOR "$HOME/Documents/bib/$key.bib"
+
 " Insert card template for obsidian to anki script
 
 noremap <leader>mc : r ~/.config/nvim/cardtemplate <CR>

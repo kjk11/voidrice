@@ -24,7 +24,7 @@ c.url.start_pages = 'https://scholar.google.com'
 # Privacy-harden everything
 
 ## Disable cookies
-config.set("content.cookies.accept", "never")
+config.set("content.cookies.accept", "no-3rdparty")
 config.set("content.cookies.store", False)
 
 ## Disable HTML5 cache

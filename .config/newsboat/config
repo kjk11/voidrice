@@ -1,6 +1,5 @@
 #show-read-feeds no
 auto-reload yes
-
 external-url-viewer "urlscan -dc -r 'linkhandler {}'"
 
 bind-key j down
@@ -53,3 +52,8 @@ highlight article "\\[embedded flash: [0-9][0-9]*\\]" green default bold
 highlight article ":.*\\(link\\)$" cyan default
 highlight article ":.*\\(image\\)$" blue default
 highlight article ":.*\\(embedded flash\\)$" magenta default
+
+# Proxy settings
+use-proxy yes
+proxy-type socks5
+proxy localhost:9060

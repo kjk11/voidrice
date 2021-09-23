@@ -43,8 +43,19 @@ config.set("content.local_storage", False)
 config.set("content.private_browsing", True)
 
 ## Use tor
-config.set("content.proxy", "socks://localhost:9050/")
+config.set("content.proxy", "socks://localhost:9061/")
 config.set("content.proxy_dns_requests", True)
+
+## Spoof http headers
+### Torbrowser user agent
+config.set("content.headers.user_agent", "Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101 Firefox/78.0")
+## Accept Language
+config.set("content.headers.accept_language","en-US,en;q=0.5")
+## MIME type
+config.set("content.headers.custom",{"accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"})
+
+## Disable reading from Canvas (Don't think this actually matters if JS is turned off)
+config.set("content.canvas_reading", False)
 
 # Bindings for normal mode
 # I like to bind semicolon to search to make it easier to reach:

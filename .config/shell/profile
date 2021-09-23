@@ -11,9 +11,10 @@ export PATH="$PATH:${$(find ~/.local/bin -type d -printf %p:)%%:}"
 unsetopt PROMPT_SP
 
 # Default programs:
-export EDITOR="nvr -s --remote-tab"
+# export EDITOR="nvr -s --remote-tab"
+export EDITOR="nvim"
 export TERMINAL="st"
-export BROWSER="qutebrowser"
+export BROWSER="firejail qutebrowser"
 
 # ~/ Clean-up:
 export XDG_CONFIG_HOME="$HOME/.config"
